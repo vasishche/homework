@@ -1,0 +1,17 @@
+#!/bin/bash
+# Task No 5
+# my home directory is /home/vasily
+cd
+cd -
+cd ~
+cd ~/
+cd $HOME
+cd $HOME/
+cd ~vasily
+cd ~vasily/
+cd /home/vasily
+cd /home/vasily/
+cd ../home/vasily
+cd ../home/vasily/
+cd ./../home/vasily
+cd ./../home/vasily/

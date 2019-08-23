@@ -1,0 +1,8 @@
+#!/bin/bash
+# Task No 1
+ls /usr/share/man/man?/*config*
+
+# globbing and pipe
+ls /usr/share/man/man+(1|7)/*system*
+# braces and globbing
+ls /usr/share/man/man{1,7}/*system*

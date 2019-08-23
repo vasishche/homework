@@ -1,0 +1,16 @@
+#!/bin/bash
+# Task No 6
+# creat new directories with parents
+mkdir -p new in-process/thread{0..2} processed
+# copy files in three directories
+eval 'cp new/data'{'{00..33} in-process/thread0','{34..66} in-process/thread1','{67..99} in-process/thread2'}';'
+# show all files in in-process (include subdirectories)
+ll in-process/*
+# move file from thread directories to processed
+mv in-process/thread?/* processed/
+# show all files from thread directories and processed
+ll in-process/* processed/*
+# remove files from "new" directory
+if [[ $(($(ls -1 new | wc -l))) == $(($(ls -1 processed | wc -l))) ]]; then rm new/*; fi
+
+
