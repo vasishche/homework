@@ -1,2 +1,2 @@
-Same steps as we did on first lecture.
+﻿Same steps as we did on first lecture.
 VM02: Linux RHx64, RAM: 2048MB, HD: Default settings, Network: 1 x Host-only Adapter, GNOME + System Administration Tools, timezone: gtm+3, host name: vm02, non-administrator user added.

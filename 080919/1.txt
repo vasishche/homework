@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # Task No 1
 ls /usr/share/man/man?/*config*
 

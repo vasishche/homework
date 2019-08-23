@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # Task No 5
 # my home directory is /home/vasily
 cd

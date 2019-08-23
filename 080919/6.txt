@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # Task No 6
 # creat new directories with parents
 mkdir -p new in-process/thread{0..2} processed
