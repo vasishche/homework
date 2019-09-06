@@ -1,0 +1,6 @@
+[Unit]
+Description="1st daemon"
+
+[Service]
+ExecStart=/tmp/one-daemon
+

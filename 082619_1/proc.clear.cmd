@@ -1,2 +1,3 @@
 #!/bin/bash
+# if something went wrong...
 kill $(ps -A | awk -r '/'"sleep|proc\.cmd"'/{print $1}')

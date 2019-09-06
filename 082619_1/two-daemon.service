@@ -1,0 +1,9 @@
+[Unit]
+Description="2nd daemon"
+Requires=one-daemon.service
+After=one-daemon.service
+
+[Service]
+Type=oneshot
+ExecStart=/tmp/two-daemon
+

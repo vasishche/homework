@@ -1,0 +1,21 @@
+1st task files:
+proc.cmd
+proc.clear.cmd
+
+2nd task files:
+sysd.cmd
+sysd.clear.cmd
+one-daemon
+one-daemon.service
+two-daemon
+two-daemon.service
+two-daemon.timer
+
+3rd task files:
+cran.cmd
+cran.clear.cmd
+cron-job
+
+4th task files:
+lsf.cmd
+lsf.clear
