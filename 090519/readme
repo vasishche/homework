@@ -1,0 +1,13 @@
+1st task files:
+fir.txt
+fir.cmd
+
+2nd task files:
+sec.txt
+sec.cmd
+
+3rd task files:
+ext.cmd
+ext.clear.cmd
+ext-daemon.cmd
+ext-daemon.service

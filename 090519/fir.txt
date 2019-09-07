@@ -1,0 +1,2 @@
+Copy text of this task into a file. Using only grep get words which have more than 5 letters and have no any other symbols.
+Hint: use grep -o -e (-o prints only the matching part of the lines, -e allows to use regexp)
