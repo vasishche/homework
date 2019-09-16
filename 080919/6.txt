@@ -11,6 +11,8 @@ mv in-process/thread?/* processed/
 # show all files from thread directories and processed
 ll in-process/* processed/*
 # remove files from "new" directory
-if [[ $(($(ls -1 new | wc -l))) == $(($(ls -1 processed | wc -l))) ]]; then rm new/*; fi
+if [[ $(ls -1 new | wc -l) == $(ls -1 processed | wc -l) ]]; then rm new/*; fi
+# compare as numbers
+# if (( $(ls -1 new | wc -l) == $(ls -1 processed | wc -l) )); then rm new/*; fi
 
 
