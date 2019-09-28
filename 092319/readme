@@ -1,0 +1,7 @@
+1. :
+VirtualBox vm1: Linux RHx64, 2CPU, RAM 2048MB, HDD; 15GB + 2x5GB, Network: NAT+Host-only, minimal, tz: gtm+3, hostname: vm1, administrator user "exam" added.
+
+2-14, 21-24. : for both VMs
+vmall-exam.cmd
+
+
