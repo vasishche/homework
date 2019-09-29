@@ -1,0 +1,17 @@
+[Unit]
+Description=Hadoop DFS datanode
+After=network.target network-online.target
+Requires=network-online.target
+
+[Service]
+User=hdfs
+Group=hadoop
+Type=forking
+ExecStart=/usr/local/hadoop/current/bin/hdfs --daemon start datanode
+ExecStop=/usr/local/hadoop/current/bin/hdfs --daemon stop datanode
+TimeoutStartSec=30
+Restart=on-failure
+PIDFile=/tmp/hadoop-hdfs-datanode.pid
+
+[Install]
+WantedBy=multi-user.target

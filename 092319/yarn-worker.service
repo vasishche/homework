@@ -1,0 +1,17 @@
+[Unit]
+Description=Hadoop YARN worker
+After=network.target network-online.target hdfs-worker.service
+Requires=network-online.target hdfs-worker.service
+
+[Service]
+User=yarn
+Group=hadoop
+Type=forking
+ExecStart=/usr/local/hadoop/current/bin/yarn --daemon start nodemanager
+ExecStop=/usr/local/hadoop/current/bin/yarn --daemon stop nodemanager
+TimeoutStartSec=30
+Restart=on-failure
+PIDFile=/tmp/hadoop-yarn-nodemanager.pid
+
+[Install]
+WantedBy=multi-user.target

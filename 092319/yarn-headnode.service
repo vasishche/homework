@@ -1,0 +1,17 @@
+[Unit]
+Description=Hadoop YARN headnode
+After=network.target network-online.target hdfs-headnode.service
+Requires=network-online.target hdfs-headnode.service
+
+[Service]
+User=yarn
+Group=hadoop
+Type=forking
+ExecStart=/usr/local/hadoop/current/bin/yarn --daemon start resourcemanager
+ExecStop=/usr/local/hadoop/current/bin/yarn --daemon stop resourcemanager
+TimeoutStartSec=30
+Restart=on-failure
+PIDFile=/tmp/hadoop-yarn-resourcemanager.pid
+
+[Install]
+WantedBy=multi-user.target
