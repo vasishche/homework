@@ -1,6 +1,6 @@
 #!/bin/bash
 # 2. I made "exam" user an administrator during install, otherwise: 
-su -c "usermod -aG wheel exam"
+# su -c "usermod -aG wheel exam"
 # add NOPASSWD:
 sudo bash -c "echo 'exam	ALL=(ALL)	NOPASSWD: ALL' > /etc/sudoers.d/exam"
 
@@ -11,6 +11,7 @@ sudo yum -y install java-1.8.0-openjdk
 if ! [[ -d /tmp/exam/ ]]; then mkdir /tmp/exam; curl https://archive.apache.org/dist/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz -o '/tmp/exam/hadoop.tar.gz'; fi
 
 # 5. extract the archive
+echo "Extracting hadoop archive..."
 sudo tar -zxf /tmp/exam/hadoop.tar.gz -C /opt/
 
 # 6. make a symlink
@@ -24,7 +25,7 @@ eval "sudo useradd -g hadoop -N "{hadoop,yarn,hdfs}";"
 # create logs directory, +w for hadoop group
 sudo mkdir /usr/local/hadoop/current/logs
 sudo chown -R hadoop:hadoop /usr/local/hadoop/current/
-sudo chmod g+w /usr/localhadoop/current/logs
+sudo chmod g+w /usr/local/hadoop/current/logs
 
 # 8. create new partitions
 echo -e "n\n\n\n\n\nt\n8e\np\nw\n" | sudo fdisk /dev/sdb
@@ -69,6 +70,7 @@ ip a | grep link/ether | awk '{print $2}' > /tmp/exam/vmac
 sudo cp exam22.service /etc/systemd/system
 sudo systemctl daemon-reload
 sudo systemctl enable exam22
+sudo firewall-cmd --permanent --zone=trusted --add-source=192.168.56.0/24
 
 # 23.
 # install git
