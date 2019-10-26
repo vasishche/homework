@@ -1,0 +1,5 @@
+[exam-repo]
+name=Exam Repo
+baseurl=file:///tmp/exam/exam-repo
+enabled=1
+gpgcheck=0
