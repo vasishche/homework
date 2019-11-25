@@ -1,0 +1,55 @@
+---
+# 5. ** create a playbook that will setup a user as in the 2nd task
+- name:  homework task No 5 playbook
+  hosts: hw
+  remote_user: root
+  gather_facts: False
+
+  vars:
+    newuser: anteus
+    newpass: pass
+  vars_prompt:
+    - name: rootpass
+      prompt: "What is your remote root password?"
+
+  tasks:
+  - name: set password for the play
+    set_fact: '{{ item }}={{ rootpass }}'
+    with_items:
+    - ansible_ssh_pass
+    - ansible_become_pass
+
+  - name: create new user
+    user:
+      name: '{{ newuser }}'
+      password: "{{ newpass | password_hash('sha512') }}"
+      update_password: on_create 
+
+  - name: make nopass sudoer
+    template:
+      src: 'sudoers.d.user.j2'
+      dest: '/etc/sudoers.d/{{ newuser }}'
+
+  - name: Create .ssh directory
+    file:
+      path: '/home/{{ newuser }}/.ssh'
+      state: directory
+      owner: '{{ newuser }}'
+      group: '{{ newuser }}'
+      mode: '0700'
+
+  - name: create key-pair
+    openssh_keypair:
+      path: "{{ '/home/'+ newuser +'/.ssh/id_rsa' }}"
+      owner: '{{ newuser }}'
+      group: '{{ newuser }}'
+      size: 2048 # default size for ssh-keygen
+      mode: 0600
+    when: inventory_hostname in groups['head']
+
+  - name: copy pub key
+    delegate_to: localhost
+    authorized_key:
+      user: '{{ newuser }}'
+      key: "{{ lookup('file', '/home/{{ newuser }}/.ssh/id_rsa.pub') }}"
+

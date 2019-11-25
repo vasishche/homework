@@ -1,0 +1,152 @@
+---
+# 4. write a playbook that:
+- name: homework task No 4 playbook
+  hosts: hw
+  remote_user: anteus
+  become: yes
+  gather_facts: False
+  vars:
+    ntp_servers:
+    - 'server ru.pool.ntp.org iburst prefer'
+    - 'server 0.europe.pool.ntp.org iburst'
+    - 'server 1.europe.pool.ntp.org iburst'
+    - 'server 2.europe.pool.ntp.org iburst'
+    - 'server 3.europe.pool.ntp.org iburst'
+    mysql_root_password: DBpass!2
+
+  tasks:
+# - updates all packages on the systems
+  - name: install epel repository
+    yum:
+      name:
+      - epel-release
+      state: present
+
+  - name: copy rpm with mysql repository
+    copy:
+      src: mysql57-community-release-el7-9.noarch.rpm
+      dest: /tmp/mysql57-community-release-el7-9.noarch.rpm
+    
+  - name: install mysql repository
+    yum:
+      name: /tmp/mysql57-community-release-el7-9.noarch.rpm
+      state: present
+
+  - name: update all packages on system
+    yum: name=* update_cache=yes state=latest
+
+# - installs ntp, nginx and mysql
+  - name: ntp, nginx and mysql
+    yum:
+      name:
+      - ntp
+      - nginx
+      - mysql-server
+      - MySQL-python # doesn't work with python2-PyMySQL
+      state: present
+
+# - for ntp replaces default config with your own (you can find ntp servers on the internet)
+  - name: generate ntp.conf file
+    template:
+      src: ntp.conf.j2
+      dest: /etc/ntp.conf
+    notify: restart ntp
+
+# - for mysql creates user and database (using corresponding module)
+  - name: Check that the .my.cnf exists
+    stat:
+      path: /root/.my.cnf
+    register: status_my_cnf
+
+  - name: Get root password
+    shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+    register: temp_root_password
+    when: status_my_cnf.stat.exists == False 
+
+  - name: update expired root user password
+    command: mysql --user root --password={{ temp_root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+    when: status_my_cnf.stat.exists == False 
+
+  - name: Create .my.cnf
+    template:
+      src: 'my.cnf.j2'
+      dest: '/root/.my.cnf'
+      owner: root
+      group: root
+      mode: 0600
+    when: status_my_cnf.stat.exists == False 
+
+  - name: restart mysql
+    service:
+      name: mysqld
+      state: restarted
+    when: status_my_cnf.stat.exists == False 
+
+  - name: Start mysqld service
+    service: name=mysqld state=started enabled=yes
+  
+  - name: Create database user 'dbuser'
+    mysql_user:
+      name: dbuser
+      password: '{{ mysql_root_password }}'
+      host: '%'
+      priv: '*.*:ALL,GRANT'
+      state: present
+
+  - name: Create a new database with name 'newdb'
+    mysql_db:
+      name: newdb
+      state: present
+
+# * for nginx creates directory /web and places there files for some test site (you can find them on the internet and you may want to fix nginx.conf appropriately)
+  - name: Add http service to filewalld public zone
+    firewalld:
+      zone: public
+      service: http
+      permanent: yes
+      state: enabled
+    notify: firewalld reload
+
+  - name: Create a directory if it does not exist
+    file:
+      path: /web
+      state: directory
+      mode: '0755'
+
+  - name: change web server config
+    lineinfile:
+      path: /etc/nginx/nginx.conf
+      regexp: '^\s*root'
+      line: '    root    /web/html;'
+
+  - name: copy site content
+    copy:
+      src: html
+      dest: /web/
+      mode: '0755'
+    notify:
+    - apply SELinux
+    - nginx reload
+
+  - name: Start nginx service
+    service: name=nginx state=started enabled=yes
+
+  handlers:
+  - name: restart ntp
+    service:
+      name: ntpd
+      state: restarted
+
+  - name: firewalld reload
+    command: firewall-cmd --reload
+
+  - name: nginx reload
+    service:
+      name: nginx
+      state: restarted
+
+  - name: apply SELinux
+    command: chcon -Rt httpd_sys_content_t /web
+
+# hw4.yml - end
+
